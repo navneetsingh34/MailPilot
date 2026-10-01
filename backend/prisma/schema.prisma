@@ -1,0 +1,139 @@
+generator client {
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String   @id @default(uuid()) @db.Uuid
+  googleId  String   @unique
+  email     String   @unique
+  name      String
+  avatarUrl String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  campaigns Campaign[]
+  emails    Email[]
+  slack     SlackIntegration?
+}
+
+/// An SMTP identity emails are sent from (Ethereal test accounts).
+model Sender {
+  id          String   @id @default(uuid()) @db.Uuid
+  name        String
+  email       String   @unique
+  smtpHost    String
+  smtpPort    Int
+  smtpUser    String
+  smtpPass    String
+  /// Overrides MAX_EMAILS_PER_HOUR_PER_SENDER when set
+  hourlyLimit Int?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  campaigns Campaign[]
+  emails    Email[]
+}
+
+/// One "Compose → Schedule" submission. Fans out into one Email per recipient.
+model Campaign {
+  id             String   @id @default(uuid()) @db.Uuid
+  userId         String   @db.Uuid
+  /// Sender picked in the "From" dropdown; null = round-robin across senders
+  senderId       String?  @db.Uuid
+  /// Client-generated key so a double-submitted form never creates two campaigns
+  idempotencyKey String?  @unique
+  subject        String
+  bodyHtml       String
+  startAt        DateTime
+  delayBetweenMs Int
+  hourlyLimit    Int
+  totalCount     Int
+  createdAt      DateTime @default(now())
+
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sender      Sender?      @relation(fields: [senderId], references: [id])
+  emails      Email[]
+  attachments Attachment[]
+
+  @@index([userId, createdAt])
+}
+
+enum EmailStatus {
+  SCHEDULED
+  SENDING
+  SENT
+  FAILED
+}
+
+/// A single outbound email = a single BullMQ job (jobId = Email.id).
+model Email {
+  id          String      @id @default(uuid()) @db.Uuid
+  campaignId  String      @db.Uuid
+  userId      String      @db.Uuid
+  senderId    String      @db.Uuid
+  recipient   String
+  status      EmailStatus @default(SCHEDULED)
+  /// When the email is due. Moves forward if a rate limit defers it.
+  scheduledAt DateTime
+  /// How many times the hourly limit pushed this email into a later window
+  deferrals   Int         @default(0)
+  sentAt      DateTime?
+  failedAt    DateTime?
+  /// When the email reached a final state (SENT or FAILED); orders the Sent tab
+  completedAt DateTime?
+  attempts    Int         @default(0)
+  /// Set while a worker holds the email; used to recover from crashes mid-send
+  lockedAt    DateTime?
+  messageId   String?
+  /// Ethereal web preview link for the sent message
+  previewUrl  String?
+  error       String?
+  starred     Boolean     @default(false)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  campaign Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sender   Sender   @relation(fields: [senderId], references: [id])
+
+  /// A recipient is only ever emailed once per campaign
+  @@unique([campaignId, recipient])
+  @@index([userId, status, scheduledAt])
+  @@index([userId, status, completedAt])
+  @@index([status, scheduledAt])
+}
+
+model Attachment {
+  id         String   @id @default(uuid()) @db.Uuid
+  campaignId String   @db.Uuid
+  filename   String
+  mimeType   String
+  size       Int
+  content    Bytes
+  createdAt  DateTime @default(now())
+
+  campaign Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+
+  @@index([campaignId])
+}
+
+/// Per-user Slack connection created by the OAuth flow.
+model SlackIntegration {
+  id          String   @id @default(uuid()) @db.Uuid
+  userId      String   @unique @db.Uuid
+  teamId      String
+  teamName    String
+  channel     String
+  webhookUrl  String
+  accessToken String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}

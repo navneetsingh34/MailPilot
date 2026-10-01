@@ -1,0 +1,72 @@
+@import 'tailwindcss';
+
+/* Design tokens pulled from the Figma */
+@theme {
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-pixel: 'Silkscreen', 'Inter', monospace;
+  --color-brand: #00a63e;
+  --color-brand-soft: #e6f4ea;
+  --color-surface: #f4f5f4;
+  --color-ink: #1c1c1c;
+  --color-muted: #8a8a8a;
+  --color-line: #ececec;
+  --color-warn-bg: #fdebd8;
+  --color-warn-text: #c2410c;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  @apply bg-white font-sans text-ink antialiased;
+}
+
+/* Rendered email HTML (detail page) and the compose editor share one look. */
+.email-body {
+  @apply text-sm leading-relaxed text-ink;
+}
+.email-body > * + * {
+  @apply mt-3;
+}
+.email-body h1 {
+  @apply text-xl font-semibold;
+}
+.email-body h2 {
+  @apply text-lg font-semibold;
+}
+.email-body h3 {
+  @apply text-base font-semibold;
+}
+.email-body ul {
+  @apply list-disc pl-6;
+}
+.email-body ol {
+  @apply list-decimal pl-6;
+}
+.email-body li > p {
+  @apply m-0;
+}
+.email-body blockquote {
+  @apply border-l-4 border-amber-300 bg-amber-50 px-4 py-2;
+}
+.email-body a {
+  @apply text-brand underline;
+}
+.email-body hr {
+  @apply border-line;
+}
+.email-body img {
+  @apply max-w-full rounded-lg;
+}
+
+/* TipTap editor */
+.tiptap {
+  @apply min-h-[280px] outline-none;
+}
+.tiptap p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  @apply pointer-events-none float-left h-0 text-muted;
+}
