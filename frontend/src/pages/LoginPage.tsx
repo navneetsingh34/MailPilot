@@ -1,6 +1,7 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import toast from 'react-hot-toast';
 import { useSearchParams } from 'react-router-dom';
+import { ColdStartNote } from '@/components/ui/ServerWaking';
 
 function GoogleIcon() {
   return (
@@ -32,7 +33,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-full items-center justify-center bg-white p-4">
+    <div className="flex min-h-full flex-col items-center justify-center bg-white p-4">
       <div className="w-full max-w-[370px] rounded-xl border border-line px-11 py-10">
         <h1 className="text-center text-[28px] font-bold">Login</h1>
 
@@ -73,6 +74,7 @@ export default function LoginPage() {
           </button>
         </form>
       </div>
+      <ColdStartNote />
     </div>
   );
 }

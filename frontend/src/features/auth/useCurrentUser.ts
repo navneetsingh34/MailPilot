@@ -17,6 +17,10 @@ export function useCurrentUser() {
       }
     },
     staleTime: 5 * 60 * 1000,
+    // A sleeping free-tier backend answers with gateway errors (or not at all) for a minute
+    // or two while it boots: keep retrying for ~3 minutes instead of giving up.
+    retry: (failures, err) => (err instanceof ApiError ? err.status >= 500 : true) && failures < 36,
+    retryDelay: 5000,
   });
 }
 
