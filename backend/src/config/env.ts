@@ -26,6 +26,11 @@ const schema = z.object({
   SLACK_CLIENT_SECRET: optional,
   SLACK_REDIRECT_URI: optional,
 
+  /** Also run the BullMQ worker inside the API process (single-service hosting). */
+  RUN_WORKER_IN_API: z
+    .enum(['true', 'false'])
+    .default('false')
+    .transform((v) => v === 'true'),
   WORKER_CONCURRENCY: z.coerce.number().int().min(1).default(5),
   MIN_DELAY_BETWEEN_SENDS_MS: z.coerce.number().int().min(0).default(2000),
   MAX_EMAILS_PER_HOUR_PER_SENDER: z.coerce.number().int().min(1).default(200),

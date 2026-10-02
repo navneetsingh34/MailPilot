@@ -1,0 +1,53 @@
+# Render Blueprint: backend API + email worker in one free web service.
+# Render dashboard → New → Blueprint → pick this repo. Fill in the secret values when prompted.
+services:
+  - type: web
+    name: reachinbox-api
+    runtime: node
+    plan: free
+    # Close to the Neon (us-east-2) database and the Bonsai (us-east-1) search cluster.
+    region: ohio
+    # --include=dev: TypeScript and the Prisma CLI are devDependencies, and NODE_ENV=production
+    # would otherwise skip them. Migrations run here because free services have no pre-deploy step.
+    buildCommand: npm ci --include=dev && npm run build --workspace backend && npm run db:deploy --workspace backend
+    startCommand: npm run start --workspace backend
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      # Free plan = one service, so the BullMQ worker runs inside the API process.
+      - key: RUN_WORKER_IN_API
+        value: 'true'
+      - key: WORKER_CONCURRENCY
+        value: '5'
+      - key: MIN_DELAY_BETWEEN_SENDS_MS
+        value: '2000'
+      - key: MAX_EMAILS_PER_HOUR_PER_SENDER
+        value: '200'
+      - key: JWT_SECRET
+        generateValue: true
+      # The Vercel URL of the frontend, e.g. https://reachinbox-scheduler.vercel.app
+      - key: FRONTEND_URL
+        sync: false
+      - key: DATABASE_URL
+        sync: false
+      - key: DIRECT_URL
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: ELASTICSEARCH_URL
+        sync: false
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      # https://<your-app>.vercel.app/api/auth/google/callback
+      - key: GOOGLE_CALLBACK_URL
+        sync: false
+      - key: SLACK_CLIENT_ID
+        sync: false
+      - key: SLACK_CLIENT_SECRET
+        sync: false
+      # https://<your-app>.vercel.app/api/slack/callback
+      - key: SLACK_REDIRECT_URI
+        sync: false

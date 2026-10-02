@@ -27,7 +27,8 @@ A production-style email scheduler: an Express + BullMQ backend that schedules, 
 12. [API](#12-api)
 13. [Testing](#13-testing)
 14. [Assumptions, shortcuts and trade-offs](#14-assumptions-shortcuts-and-trade-offs)
-15. [Project structure](#15-project-structure)
+15. [Deployment](#15-deployment)
+16. [Project structure](#16-project-structure)
 
 ---
 
@@ -378,7 +379,21 @@ npm run load-test --workspace backend -- --count 1000 --watch 120
 
 ---
 
-## 15. Project structure
+## 15. Deployment
+
+| Part | Host | Config |
+|---|---|---|
+| Frontend | **Vercel** | [`frontend/vercel.json`](frontend/vercel.json): builds the Vite app and proxies `/api/*` to the backend, so the session cookie stays first-party |
+| API + worker | **Render** (free web service) | [`render.yaml`](render.yaml) blueprint: `RUN_WORKER_IN_API=true` runs the BullMQ worker inside the API process; migrations run during the build |
+| Postgres / Redis / search | Neon, Redis Cloud, Bonsai | Same as development |
+
+**Order:** deploy the Render blueprint first (its URL goes into `vercel.json`'s rewrite), then the Vercel project (root directory `frontend`), then set `FRONTEND_URL`, `GOOGLE_CALLBACK_URL` and `SLACK_REDIRECT_URI` on Render to the Vercel URL and add those redirect URLs in Google Cloud and the Slack app.
+
+**Free-tier note:** Render's free web service sleeps after 15 minutes without traffic. Jobs are stored in Redis, so emails that fall due while it sleeps are sent as soon as it wakes (the startup reconciler picks them up). An uptime monitor pinging `/api/health` keeps it awake. On a paid plan the worker would run as its own background service (`npm run start:worker`) with `RUN_WORKER_IN_API=false`.
+
+---
+
+## 16. Project structure
 
 ```
 backend/
@@ -400,4 +415,5 @@ frontend/
     components/          ui/ (reusable), layout/ (sidebar, user menu)
     api/ types/ lib/
 docker-compose.yml       optional local Postgres, Redis, OpenSearch
+render.yaml              Render blueprint (API + worker)
 ```
