@@ -24,7 +24,7 @@ function StatusNote({ email }: { email: EmailDetail }) {
 
   return (
     <div
-      className={`mb-6 flex items-center gap-2 rounded-lg px-3 py-2 text-xs ${
+      className={`mb-6 flex flex-wrap items-center gap-2 rounded-lg px-3 py-2 text-xs ${
         email.status === 'FAILED' ? 'bg-red-50 text-red-700' : 'bg-surface text-muted'
       }`}
     >
@@ -49,7 +49,7 @@ function Attachments({ email }: { email: EmailDetail }) {
           href={attachmentUrl(email.id, a.id)}
           target="_blank"
           rel="noopener noreferrer"
-          className="w-[158px] overflow-hidden rounded-xl border border-line bg-[#fafafa] transition hover:shadow-sm"
+          className="w-[calc(50%-0.375rem)] overflow-hidden rounded-xl border sm:w-[158px] border-line bg-[#fafafa] transition hover:shadow-sm"
         >
           {a.mimeType.startsWith('image/') ? (
             <img src={attachmentUrl(email.id, a.id)} alt="" className="h-[88px] w-full object-cover" />
@@ -77,19 +77,19 @@ export default function EmailDetailPage() {
 
   return (
     <div className="flex h-full flex-col">
-      <header className="flex items-center gap-3 border-b border-line px-4 py-3">
+      <header className="flex items-center gap-2 border-b border-line px-2 py-3 sm:gap-3 sm:px-4">
         <IconButton label="Back" onClick={() => (window.history.length > 1 ? navigate(-1) : navigate(backTo))}>
           <ArrowLeft className="size-5 text-ink" />
         </IconButton>
-        <h1 className="min-w-0 flex-1 truncate text-xl">{email?.subject ?? ''}</h1>
+        <h1 className="min-w-0 flex-1 truncate text-lg sm:text-xl">{email?.subject ?? ''}</h1>
         {email && (
           <>
             <StatusBadge email={email} />
             <StarButton id={email.id} starred={email.starred} />
           </>
         )}
-        <span className="mx-1 h-6 w-px bg-line" />
-        {user && <Avatar name={user.name} src={user.avatarUrl} className="size-8 text-sm" />}
+        <span className="mx-1 hidden h-6 w-px bg-line sm:block" />
+        {user && <Avatar name={user.name} src={user.avatarUrl} className="hidden size-8 text-sm sm:block" />}
       </header>
 
       <div className="flex-1 overflow-y-auto">
@@ -114,13 +114,13 @@ export default function EmailDetailPage() {
             }
           />
         ) : (
-          <article className="mx-auto max-w-[820px] px-6 py-6">
+          <article className="mx-auto max-w-[820px] px-4 py-5 sm:px-6 sm:py-6">
             <div className="mb-5 flex items-start gap-3">
               <Avatar name={email.sender.name} className="size-9 text-sm" />
               <div className="min-w-0 flex-1">
                 <p className="text-sm">
                   <span className="font-semibold">{email.sender.name}</span>{' '}
-                  <span className="text-xs text-muted">&lt;{email.sender.email}&gt;</span>
+                  <span className="block truncate text-xs text-muted sm:inline">&lt;{email.sender.email}&gt;</span>
                 </p>
                 <p className="text-xs text-muted">to {email.recipient}</p>
               </div>
@@ -128,7 +128,7 @@ export default function EmailDetailPage() {
                 {formatDateTime(email.sentAt ?? email.scheduledAt)}
               </time>
             </div>
-            <div className="pl-12">
+            <div className="sm:pl-12">
               <StatusNote email={email} />
               {/* Body HTML is sanitized by the backend when the campaign is created. */}
               <div className="email-body" dangerouslySetInnerHTML={{ __html: email.bodyHtml }} />

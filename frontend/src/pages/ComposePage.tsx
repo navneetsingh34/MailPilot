@@ -22,8 +22,8 @@ type Field = 'recipients' | 'subject' | 'body' | 'hourlyLimit';
 
 function FormRow({ label, children }: { label: string; children: ReactNode }) {
   return (
-    <div className="flex items-start gap-4">
-      <span className="w-[52px] shrink-0 pt-2.5 text-[13px]">{label}</span>
+    <div className="flex items-start gap-2 sm:gap-4">
+      <span className="w-[48px] shrink-0 pt-2.5 text-[13px] sm:w-[52px]">{label}</span>
       <div className="min-w-0 flex-1">{children}</div>
     </div>
   );
@@ -108,11 +108,11 @@ export default function ComposePage() {
 
   return (
     <div className="flex h-full flex-col">
-      <header className="flex items-center gap-3 px-4 py-3">
+      <header className="flex items-center gap-1.5 px-2 py-3 sm:gap-3 sm:px-4">
         <IconButton label="Back" onClick={() => (window.history.length > 1 ? navigate(-1) : navigate('/scheduled'))}>
           <ArrowLeft className="size-5 text-ink" />
         </IconButton>
-        <h1 className="flex-1 text-xl">Compose New Email</h1>
+        <h1 className="min-w-0 flex-1 truncate text-lg sm:text-xl">Compose New Email</h1>
 
         <IconButton label="Attach files" onClick={() => fileInput.current?.click()} className="relative">
           <Paperclip className={clsx('size-[18px]', files.length ? 'text-brand' : 'text-[#4b4b4b]')} />
@@ -136,7 +136,7 @@ export default function ComposePage() {
       </header>
 
       <div className="flex-1 overflow-y-auto">
-        <div className="mx-auto max-w-[780px] space-y-3 px-6 pt-3 pb-10">
+        <div className="mx-auto max-w-[780px] space-y-3 px-4 pt-3 pb-10 sm:px-6">
           <FormRow label="From">
             <SenderSelect senders={senders} value={senderId} onChange={setSenderId} />
           </FormRow>
@@ -167,7 +167,7 @@ export default function ComposePage() {
             />
           </FormRow>
 
-          <div className="flex flex-wrap items-center gap-x-8 gap-y-2 py-1">
+          <div className="flex flex-wrap items-center gap-x-8 gap-y-3 py-1">
             <NumberBox label="Delay between 2 emails" value={delaySeconds} onChange={setDelaySeconds} suffix="sec" hint="Seconds between consecutive emails in this campaign" />
             <NumberBox
               label="Hourly Limit"

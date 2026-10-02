@@ -110,7 +110,7 @@ export function RecipientField({ recipients, onChange, invalid }: RecipientField
             onBlur={commitDraft}
             placeholder={recipients.length ? '' : 'recipient@example.com'}
             aria-label="Recipients"
-            className="h-7 min-w-[140px] flex-1 bg-transparent text-[13px] outline-none placeholder:text-[#b5b5b5]"
+            className="h-7 min-w-[120px] flex-1 bg-transparent text-[13px] outline-none placeholder:text-[#b5b5b5]"
           />
         </div>
         <button
@@ -119,7 +119,8 @@ export function RecipientField({ recipients, onChange, invalid }: RecipientField
           className="inline-flex h-7 shrink-0 items-center gap-1.5 text-[13px] font-medium text-brand hover:underline"
         >
           <Upload className="size-4" />
-          Upload List
+          <span className="hidden sm:inline">Upload List</span>
+          <span className="sm:hidden">Upload</span>
         </button>
         <input
           ref={fileInput}

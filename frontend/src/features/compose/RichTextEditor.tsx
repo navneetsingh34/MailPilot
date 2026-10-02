@@ -44,7 +44,7 @@ export function RichTextEditor({ onChange, invalid }: RichTextEditorProps) {
   return (
     <div className={clsx('rounded-xl bg-[#f7f7f7] p-3', invalid && 'ring-1 ring-red-400')}>
       {editor && <Toolbar editor={editor} />}
-      <EditorContent editor={editor} className="cursor-text px-3 pt-4 pb-2" onClick={() => editor?.commands.focus()} />
+      <EditorContent editor={editor} className="cursor-text px-1 pt-4 pb-2 sm:px-3" onClick={() => editor?.commands.focus()} />
     </div>
   );
 }
@@ -108,7 +108,7 @@ function Toolbar({ editor }: { editor: Editor }) {
   const AlignIcon = ALIGNMENTS.find((a) => a.value === s.align)!.icon;
 
   return (
-    <div className="flex flex-wrap items-center gap-0.5 rounded-full bg-white px-3 py-1 shadow-[0_0_0_1px_#efefef]">
+    <div className="flex flex-wrap items-center gap-0.5 rounded-2xl bg-white px-2 py-1 shadow-[0_0_0_1px_#efefef] sm:rounded-full sm:px-3">
       <ToolButton label="Undo" disabled={!s.canUndo} onClick={() => run((c) => c.undo())}>
         <Undo2 className="size-4" />
       </ToolButton>

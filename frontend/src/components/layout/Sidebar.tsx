@@ -11,11 +11,11 @@ const NAV = [
   { to: '/sent', label: 'Sent', icon: Send, countKey: 'sent' },
 ] as const;
 
-export function Sidebar({ user }: { user: CurrentUser }) {
+export function Sidebar({ user, className }: { user: CurrentUser; className?: string }) {
   const { data: counts } = useEmailCounts();
 
   return (
-    <aside className="flex w-[200px] shrink-0 flex-col gap-3 px-2 py-4">
+    <aside className={clsx('shrink-0 flex-col gap-3 overflow-y-auto px-2 py-4', className)}>
       <Link to="/scheduled" className="px-2 pb-2">
         <Logo />
       </Link>

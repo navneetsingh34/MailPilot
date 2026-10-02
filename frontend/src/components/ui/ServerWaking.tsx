@@ -21,8 +21,8 @@ export function ServerWakingScreen() {
       <Spinner />
       {slow && SHOW_COLD_START_HINTS && (
         <div className="max-w-sm">
-          <p className="font-medium">Waking up the server…</p>
-          <p className="mt-1 text-sm text-muted">{COLD_START_COPY} This page continues on its own.</p>
+          <p className="font-medium text-red-700">Waking up the server…</p>
+          <p className="mt-1 text-sm text-red-600">{COLD_START_COPY} This page continues on its own.</p>
         </div>
       )}
     </div>
@@ -33,7 +33,7 @@ export function ServerWakingScreen() {
 export function ColdStartNote() {
   if (!SHOW_COLD_START_HINTS) return null;
   return (
-    <p className="mt-4 flex max-w-[370px] items-start gap-2 rounded-lg bg-surface px-3 py-2.5 text-xs text-muted">
+    <p role="note" className="mt-4 flex w-full max-w-[370px] items-start gap-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2.5 text-xs font-medium text-red-700">
       <Info className="mt-px size-3.5 shrink-0" />
       <span>{COLD_START_COPY}</span>
     </p>
