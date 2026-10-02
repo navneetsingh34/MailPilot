@@ -5,7 +5,7 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "rewrites": [
-    { "source": "/api/:path*", "destination": "https://reachinbox-api.onrender.com/api/:path*" },
+    { "source": "/api/:path*", "destination": "https://reachinbox-email-scheduler-5jss.onrender.com/api/:path*" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
