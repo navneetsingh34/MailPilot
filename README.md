@@ -2,7 +2,8 @@
 
 A production-style email scheduler: an Express + BullMQ backend that schedules, rate-limits and sends emails through Ethereal SMTP, and a React dashboard (built to the Figma) to compose campaigns and track scheduled / sent emails.
 
-**Demo video:** _add link here_
+**Demo video:** [Watch on Google Drive](https://drive.google.com/file/d/1sAYW6EY8sQaOFTYjJOWWd6VoLbAFSj_d/view?usp=sharing)  
+**Live demo:** <https://reachinbox-email-scheduler-tau-two.vercel.app> (backend on Render's free plan: the first request after it has been idle can take 1–2 minutes)
 
 | | |
 |---|---|
