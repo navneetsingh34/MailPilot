@@ -2,7 +2,9 @@
 
 MailPilot lets you schedule cold-email campaigns. You log in with Google, upload a list of leads, write the email and pick when it should start, how far apart the emails should be and how many can go out per hour. Each email is saved in PostgreSQL and gets its own BullMQ delayed job in Redis, so there's no cron job polling the database. A separate worker process sends the emails over SMTP when they're due, keeps every sender and campaign under its hourly limit, and pushes extra emails into later hours instead of dropping them. If a limit is hit you get a Slack message. You can kill the worker in the middle of a big campaign and restart it, and every email still goes out exactly once.
 
-Live demo: [LIVE_DEMO_URL]
+Live demo: https://reachinbox-email-scheduler-tau-two.vercel.app
+
+API health check: https://reachinbox-email-scheduler-5jss.onrender.com/api/health
 
 (The backend is on a free hosting plan, so if nobody has used it for a while the first request can take a minute or two.)
 
