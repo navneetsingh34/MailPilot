@@ -70,7 +70,7 @@ export async function sendEmail(email: OutboundEmail): Promise<SendResult> {
     subject: email.campaign.subject,
     html: email.campaign.bodyHtml,
     // Deterministic Message-ID: if a crash ever forces a resend, receivers can de-dupe it.
-    messageId: `<${email.id}@reachinbox.scheduler>`,
+    messageId: `<${email.id}@mailpilot.scheduler>`,
     attachments: email.campaign.attachments.map((a) => ({
       filename: a.filename,
       contentType: a.mimeType,

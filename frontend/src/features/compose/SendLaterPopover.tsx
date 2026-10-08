@@ -26,7 +26,7 @@ const PRESETS = [
   { label: 'Tomorrow, 3:00 PM', at: () => tomorrowAt(15) },
 ];
 
-/** Figma's "Send Later" panel: free date-time pick or presets, confirmed with Done. */
+/** The "Send Later" panel: free date-time pick or presets, confirmed with Done. */
 export function SendLaterPopover({ value, onChange }: SendLaterPopoverProps) {
   const [open, setOpen] = useState(false);
   const [draft, setDraft] = useState('');

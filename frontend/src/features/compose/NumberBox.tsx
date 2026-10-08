@@ -10,7 +10,7 @@ interface NumberBoxProps {
   hint?: string;
 }
 
-/** Figma's small boxed numeric input ("Delay between 2 emails [00]"). */
+/** Small boxed numeric input ("Delay between 2 emails [00]"). */
 export function NumberBox({ label, value, onChange, suffix, invalid, hint }: NumberBoxProps) {
   const id = useId();
   return (

@@ -15,7 +15,7 @@ export function createQueueDashboardRouter() {
   createBullBoard({
     queues: [new BullMQAdapter(emailQueue, { displayName: 'Email sends' })],
     serverAdapter,
-    options: { uiConfig: { boardTitle: 'ReachInbox Queues' } },
+    options: { uiConfig: { boardTitle: 'MailPilot Queues' } },
   });
   return serverAdapter.getRouter();
 }

@@ -7,7 +7,7 @@ interface AvatarProps {
   className?: string;
 }
 
-/** Image avatar that falls back to a green initial circle (Figma's sender avatar). */
+/** Image avatar that falls back to a green initial circle (the sender avatar). */
 export function Avatar({ name, src, className }: AvatarProps) {
   const [failed, setFailed] = useState(false);
   const classes = clsx('size-8 shrink-0 rounded-full', className);

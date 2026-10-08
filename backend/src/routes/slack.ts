@@ -38,7 +38,7 @@ slackRouter.delete('/', requireAuth, async (req, res) => {
 
 slackRouter.post('/test', requireAuth, async (req, res) => {
   const delivered = await notifyUserOnSlack(currentUserId(req), {
-    text: '👋 Test message from ReachInbox. Rate-limit alerts will appear in this channel.',
+    text: '👋 Test message from MailPilot. Rate-limit alerts will appear in this channel.',
   });
   if (!delivered) throw new HttpError(409, 'Slack is not connected');
   res.json({ delivered });

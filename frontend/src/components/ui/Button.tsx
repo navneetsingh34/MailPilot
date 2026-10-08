@@ -20,7 +20,7 @@ const sizes: Record<Size, string> = {
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: Variant;
   size?: Size;
-  /** Fully rounded pill (Figma's Compose / Send buttons) */
+  /** Fully rounded pill (the Compose / Send buttons) */
   pill?: boolean;
   loading?: boolean;
 }

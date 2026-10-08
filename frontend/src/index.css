@@ -1,6 +1,6 @@
 @import 'tailwindcss';
 
-/* Design tokens pulled from the Figma */
+/* Design tokens */
 @theme {
   --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
   --font-pixel: 'Silkscreen', 'Inter', monospace;

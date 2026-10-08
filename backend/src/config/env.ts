@@ -16,7 +16,7 @@ const schema = z.object({
   REDIS_URL: z.string().url(),
   ELASTICSEARCH_URL: optional,
   ELASTICSEARCH_API_KEY: optional,
-  ELASTICSEARCH_INDEX: z.string().min(1).default('reachinbox-emails'),
+  ELASTICSEARCH_INDEX: z.string().min(1).default('mailpilot-emails'),
 
   GOOGLE_CLIENT_ID: optional,
   GOOGLE_CLIENT_SECRET: optional,

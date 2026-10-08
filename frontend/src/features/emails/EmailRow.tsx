@@ -5,7 +5,7 @@ import { StarButton } from './StarButton';
 import { StatusBadge } from './StatusBadge';
 
 /**
- * Desktop: one 42px line (recipient · badge · subject + preview · time · star), as in the Figma.
+ * Desktop: one 42px line (recipient · badge · subject + preview · time · star).
  * Mobile: two lines (recipient + badge, then subject + preview) so nothing is cut to nothing.
  */
 export function EmailRow({ email, tab }: { email: EmailListItem; tab: MailboxTab }) {

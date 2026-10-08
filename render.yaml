@@ -26,7 +26,7 @@ services:
         value: '200'
       - key: JWT_SECRET
         generateValue: true
-      # The Vercel URL of the frontend, e.g. https://reachinbox-scheduler.vercel.app
+      # The Vercel URL of the frontend, e.g. https://mailpilot.vercel.app
       - key: FRONTEND_URL
         sync: false
       - key: DATABASE_URL

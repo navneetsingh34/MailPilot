@@ -1,5 +1,5 @@
 {
-  "name": "reachinbox-scheduler",
+  "name": "mailpilot",
   "private": true,
   "workspaces": [
     "backend",
@@ -11,6 +11,9 @@
     "dev:worker": "npm run dev:worker --workspace backend",
     "dev:web": "npm run dev --workspace frontend",
     "build": "npm run build --workspace backend && npm run build --workspace frontend",
+    "start": "npm run start --workspace backend",
+    "start:worker": "npm run start:worker --workspace backend",
+    "test": "npm test --workspace backend",
     "typecheck": "npm run typecheck --workspace backend && npm run typecheck --workspace frontend"
   },
   "devDependencies": {

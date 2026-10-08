@@ -75,7 +75,7 @@ export async function completeSlackInstall(code: string, state: string) {
   });
 
   await postToSlack(userId, integration.webhookUrl, {
-    text: `✅ ReachInbox is connected. Rate-limit alerts will be posted to ${integration.channel}.`,
+    text: `✅ MailPilot is connected. Rate-limit alerts will be posted to ${integration.channel}.`,
   });
   return integration;
 }
