@@ -34,3 +34,24 @@ export function useLogout() {
     },
   });
 }
+
+export interface LoginInput {
+  email: string;
+  password: string;
+}
+
+export interface SignupInput extends LoginInput {
+  name: string;
+}
+
+/** Both endpoints set the session cookie and return the profile, so seed the `me` query with it. */
+function useSessionMutation<T>(path: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (input: T) => api<CurrentUser>(path, { method: 'POST', body: JSON.stringify(input) }),
+    onSuccess: (user) => queryClient.setQueryData(currentUserKey, user),
+  });
+}
+
+export const useLogin = () => useSessionMutation<LoginInput>('/auth/login');
+export const useSignup = () => useSessionMutation<SignupInput>('/auth/signup');

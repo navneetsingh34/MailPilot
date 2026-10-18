@@ -2,7 +2,7 @@
 
 **🌐 Live demo: [reachinbox-email-scheduler-tau-two.vercel.app](https://reachinbox-email-scheduler-tau-two.vercel.app)** · API health: [/api/health](https://reachinbox-email-scheduler-5jss.onrender.com/api/health)
 
-MailPilot lets you schedule cold-email campaigns. You log in with Google, upload a list of leads, write the email and pick when it should start, how far apart the emails should be and how many can go out per hour. Each email is saved in PostgreSQL and gets its own BullMQ delayed job in Redis, so there's no cron job polling the database. A separate worker process sends the emails over SMTP when they're due, keeps every sender and campaign under its hourly limit, and pushes extra emails into later hours instead of dropping them. If a limit is hit you get a Slack message. You can kill the worker in the middle of a big campaign and restart it, and every email still goes out exactly once.
+MailPilot lets you schedule cold-email campaigns. You sign up with email and password (or log in with Google), upload a list of leads, write the email and pick when it should start, how far apart the emails should be and how many can go out per hour. Each email is saved in PostgreSQL and gets its own BullMQ delayed job in Redis, so there's no cron job polling the database. A separate worker process sends the emails over SMTP when they're due, keeps every sender and campaign under its hourly limit, and pushes extra emails into later hours instead of dropping them. If a limit is hit you get a Slack message. You can kill the worker in the middle of a big campaign and restart it, and every email still goes out exactly once.
 
 (The backend is on a free hosting plan, so if nobody has used it for a while the first request can take a minute or two. Open the health link first to wake it up.)
 
@@ -18,7 +18,8 @@ Built with TypeScript, Express 5, BullMQ, Redis, PostgreSQL (Prisma), OpenSearch
 - Emails over the limit are moved to later hours in their original order
 - Slack alerts through a real OAuth install, one per sender/campaign per hour
 - Full-text search on OpenSearch, with a Postgres fallback
-- Google login with an httpOnly session cookie
+- Email/password signup and login (scrypt-hashed passwords) or Google login, both with an httpOnly session cookie
+- Rate limiting on the auth endpoints, plus a lockout after repeated failed logins, counted in Redis
 - Bull Board at `/api/admin/queues` to watch the queue live
 - Scheduled and Sent tabs, email detail page, starring, filters, and a layout that works on mobile
 
@@ -81,7 +82,7 @@ Changes to emails are collected and written to OpenSearch in bulk. Each document
 
 ### Auth and monitoring
 
-Login uses Google OAuth: the backend verifies the ID token with `google-auth-library`, then sets a signed JWT in an httpOnly cookie. Bull Board at `/api/admin/queues` shows waiting, delayed, active, completed and failed jobs.
+You can sign up with an email and password (`POST /api/auth/signup`, then `POST /api/auth/login`). Passwords are hashed with scrypt. You can also log in with Google OAuth, where the backend verifies the ID token with `google-auth-library`. Both ways set a signed JWT in an httpOnly cookie. If you log in with Google using an email that already has a password account, the two are linked. The password is removed at that point, because signup never proved who owns the address. The auth endpoints share a per-IP token bucket in Redis (30 requests a minute, refilled one token every 2 seconds, run as a Lua script so it's atomic across instances), and 10 failed logins for one email or IP block further attempts for 15 minutes. Bull Board at `/api/admin/queues` shows waiting, delayed, active, completed and failed jobs.
 
 ## Reliability testing
 
@@ -190,7 +191,7 @@ npm start             # built API; npm run start:worker for the worker
 │   └── src/
 │       ├── config/        # env validation
 │       ├── lib/           # prisma, redis, opensearch, logger, jwt
-│       ├── middleware/    # auth, errors
+│       ├── middleware/    # auth, errors, rate limiting
 │       ├── queue/         # BullMQ queue + startup reconciler
 │       ├── routes/        # auth, campaigns, emails, senders, slack, health, queue dashboard
 │       ├── schemas/       # zod request schemas

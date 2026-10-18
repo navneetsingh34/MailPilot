@@ -1,11 +1,12 @@
 import { lazy, Suspense } from 'react';
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { AppLayout } from './components/layout/AppLayout';
-import { Spinner } from './components/ui/Spinner';
+import { MailLoader } from './components/ui/MailLoader';
 import { RedirectIfAuthed, RequireAuth } from './features/auth/RequireAuth';
 import EmailDetailPage from './pages/EmailDetailPage';
 import LoginPage from './pages/LoginPage';
 import MailboxPage from './pages/MailboxPage';
+import SignupPage from './pages/SignupPage';
 
 // The rich-text editor is the heaviest dependency; only load it when composing.
 const ComposePage = lazy(() => import('./pages/ComposePage'));
@@ -24,6 +25,14 @@ export default function App() {
         element={
           <RedirectIfAuthed>
             <LoginPage />
+          </RedirectIfAuthed>
+        }
+      />
+      <Route
+        path="/signup"
+        element={
+          <RedirectIfAuthed>
+            <SignupPage />
           </RedirectIfAuthed>
         }
       />
@@ -53,7 +62,7 @@ export default function App() {
             <Suspense
               fallback={
                 <div className="flex h-full items-center justify-center">
-                  <Spinner />
+                  <MailLoader label="Opening the composer" />
                 </div>
               }
             >
