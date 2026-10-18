@@ -4,7 +4,7 @@ import { Avatar } from '@/components/ui/Avatar';
 import { Button } from '@/components/ui/Button';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { IconButton } from '@/components/ui/IconButton';
-import { Spinner } from '@/components/ui/Spinner';
+import { Skeleton } from '@/components/ui/Skeleton';
 import { useCurrentUser } from '@/features/auth/useCurrentUser';
 import { attachmentUrl, useEmail } from '@/features/emails/api';
 import { StarButton } from '@/features/emails/StarButton';
@@ -68,6 +68,35 @@ function Attachments({ email }: { email: EmailDetail }) {
   );
 }
 
+/** Same shape as the loaded article: sender line, then a few paragraphs of body. */
+function EmailDetailSkeleton() {
+  return (
+    <div role="status" aria-busy="true" aria-label="Loading email" className="mx-auto max-w-[820px] px-4 py-5 sm:px-6 sm:py-6">
+      <div className="mb-6 flex items-start gap-3">
+        <Skeleton className="size-9 shrink-0 rounded-full" />
+        <div className="flex-1 space-y-2 pt-0.5">
+          <Skeleton className="h-3.5 w-48 max-w-full" />
+          <Skeleton className="h-3 w-32" />
+        </div>
+        <Skeleton className="h-3 w-24 shrink-0" />
+      </div>
+      <div className="space-y-6 sm:pl-12">
+        {[
+          ['92%', '100%', '78%'],
+          ['100%', '86%', '95%', '60%'],
+          ['70%', '40%'],
+        ].map((lines, p) => (
+          <div key={p} className="space-y-2.5">
+            {lines.map((width, l) => (
+              <Skeleton key={l} className="h-3" style={{ width }} />
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function EmailDetailPage() {
   const { id = '' } = useParams();
   const navigate = useNavigate();
@@ -81,7 +110,9 @@ export default function EmailDetailPage() {
         <IconButton label="Back" onClick={() => (window.history.length > 1 ? navigate(-1) : navigate(backTo))}>
           <ArrowLeft className="size-5 text-ink" />
         </IconButton>
-        <h1 className="min-w-0 flex-1 truncate text-lg sm:text-xl">{email?.subject ?? ''}</h1>
+        <h1 className="min-w-0 flex-1 truncate text-lg sm:text-xl">
+          {isLoading ? <Skeleton className="h-5 w-64 max-w-full" /> : (email?.subject ?? '')}
+        </h1>
         {email && (
           <>
             <StatusBadge email={email} />
@@ -94,9 +125,7 @@ export default function EmailDetailPage() {
 
       <div className="flex-1 overflow-y-auto">
         {isLoading ? (
-          <div className="flex justify-center py-24">
-            <Spinner />
-          </div>
+          <EmailDetailSkeleton />
         ) : error || !email ? (
           <EmptyState
             icon={<AlertCircle className="size-5" />}

@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import type { ButtonHTMLAttributes } from 'react';
-import { Spinner } from './Spinner';
+import { PlaneLoader } from './PlaneLoader';
 
 type Variant = 'primary' | 'outline' | 'ghost' | 'soft';
 type Size = 'sm' | 'md';
@@ -39,7 +39,7 @@ export function Button({
     <button
       disabled={disabled || loading}
       className={clsx(
-        'inline-flex items-center justify-center gap-2 font-medium transition disabled:cursor-not-allowed disabled:opacity-60',
+        'inline-flex items-center justify-center gap-2 font-medium transition active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-60 disabled:active:scale-100',
         pill ? 'rounded-full' : 'rounded-lg',
         variants[variant],
         sizes[size],
@@ -47,7 +47,7 @@ export function Button({
       )}
       {...props}
     >
-      {loading && <Spinner tone="current" className="size-3.5" />}
+      {loading && <PlaneLoader />}
       {children}
     </button>
   );

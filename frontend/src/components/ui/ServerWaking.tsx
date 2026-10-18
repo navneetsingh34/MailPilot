@@ -1,6 +1,6 @@
 import { Info } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { Spinner } from './Spinner';
+import { MailLoader } from './MailLoader';
 
 /** The deployed backend runs on Render's free plan, which sleeps when idle. */
 export const SHOW_COLD_START_HINTS = import.meta.env.PROD;
@@ -18,7 +18,7 @@ export function ServerWakingScreen() {
 
   return (
     <div className="flex h-full flex-col items-center justify-center gap-4 px-6 text-center">
-      <Spinner />
+      <MailLoader />
       {slow && SHOW_COLD_START_HINTS && (
         <div className="max-w-sm">
           <p className="font-medium text-red-700">Waking up the server…</p>
